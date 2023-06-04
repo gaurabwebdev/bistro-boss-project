@@ -13,24 +13,27 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import useCart from "../../Hooks/UseCart/UseCart";
+import useAdmin from "../../Hooks/UseAdmin/UseAdmin";
 
 const Dashboard = () => {
   const [cart] = useCart();
   // TODO:: load data from the server to have dynamic isAdmin based on Data
-  const isAdmin = true;
+  // const isAdmin = true;
+  const [isAdmin] = useAdmin();
+  console.log(isAdmin);
   return (
     <div className="drawer drawer-mobile">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
-        <div>
-          <Outlet />
-        </div>
         <label
           htmlFor="my-drawer-2"
           className="btn btn-primary drawer-button lg:hidden"
         >
           Open drawer
         </label>
+        <div>
+          <Outlet />
+        </div>
       </div>
       <div className="drawer-side bg-[#D1A054]">
         <label htmlFor="my-drawer-2 " className="drawer-overlay"></label>
@@ -50,7 +53,7 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to={"/dashboard/reservation"}
+                  to={"/dashboard/additem"}
                   className={`${({ isActive }) => {
                     isActive ? "active" : "";
                   }}`}
@@ -61,7 +64,7 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to={"/dashboard/payment"}
+                  to={"/dashboard/manageitems"}
                   className={`${({ isActive }) => {
                     isActive ? "active" : "";
                   }}`}

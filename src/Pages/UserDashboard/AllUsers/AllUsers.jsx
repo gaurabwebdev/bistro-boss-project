@@ -7,16 +7,12 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hooks/UseAxios/UseAxios";
 
 const AllUsers = () => {
-  // const [axiosSecure] = useAxiosSecure();
-  const jToken = localStorage.getItem("accessToken");
+  const [axiosSecure] = useAxiosSecure();
+  // const jToken = localStorage.getItem("accessToken");
   const { data: users = [], refetch } = useQuery(["users"], async () => {
-    const res = await fetch("http://localhost:5000/users", {
-      headers: {
-        authorization: `Bearer ${jToken}`,
-      },
-    });
+    const res = await axiosSecure.get("/users");
     console.log("res is ", res);
-    return res.json();
+    return res.data;
   });
 
   const handleMakeAdmin = (user) => {

@@ -10,6 +10,9 @@ import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Lyouts/Dashboard/Dashboard";
 import MyCart from "../Pages/UserDashboard/MyCart";
 import AllUsers from "../Pages/UserDashboard/AllUsers/AllUsers";
+import AddItem from "../Pages/UserDashboard/AddItem/AddItem";
+import AdminRoute from "./AdminRoute";
+import ManageItem from "../Pages/UserDashboard/ManageItem/ManageItem";
 
 const AllRoutes = createBrowserRouter([
   {
@@ -53,6 +56,22 @@ const AllRoutes = createBrowserRouter([
       {
         path: "allusers",
         element: <AllUsers />,
+      },
+      {
+        path: "additem",
+        element: (
+          <AdminRoute>
+            <AddItem />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manageitems",
+        element: (
+          <AdminRoute>
+            <ManageItem />
+          </AdminRoute>
+        ),
       },
     ],
   },
