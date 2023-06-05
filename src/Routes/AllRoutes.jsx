@@ -13,6 +13,7 @@ import AllUsers from "../Pages/UserDashboard/AllUsers/AllUsers";
 import AddItem from "../Pages/UserDashboard/AddItem/AddItem";
 import AdminRoute from "./AdminRoute";
 import ManageItem from "../Pages/UserDashboard/ManageItem/ManageItem";
+import Payment from "../Pages/UserDashboard/Payment/Payment";
 
 const AllRoutes = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const AllRoutes = createBrowserRouter([
             <ManageItem />
           </AdminRoute>
         ),
+      },
+      {
+        path: "/dashboard/payment",
+        element: <Payment />,
       },
     ],
   },

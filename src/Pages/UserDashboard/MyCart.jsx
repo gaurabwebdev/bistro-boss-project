@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import SectionTitle from "../../Components/Shared/SectionTitle/SectionTitle";
 import useCart from "../../Hooks/UseCart/UseCart";
 import ProductTable from "./ProductTable/ProductTable";
+import { Link } from "react-router-dom";
 
 const MyCart = () => {
   const [cart] = useCart();
@@ -31,7 +32,9 @@ const MyCart = () => {
           <h2 className="text-2xl text-gray-500">
             Total Price : ${totalPrice}
           </h2>
-          <button className="btn btn-sm">Pay</button>
+          <Link to={"/dashboard/payment"}>
+            <button className="btn btn-sm">Pay</button>
+          </Link>
         </div>
         <div className="mt-5">
           <ProductTable totalPrice={totalPrice} />
