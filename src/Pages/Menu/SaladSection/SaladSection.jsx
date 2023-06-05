@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 
 const SaladSection = () => {
   // ${saladCoverContent.coverTitle}
-  const [menu] = useMenu("salad");
+  const [, menu] = useMenu();
+  const currentMenu = menu.filter((item) => item.category === "salad");
   const saladCoverContent = {
     img: pizzaCover,
     coverTitle: "salad",
@@ -18,8 +19,10 @@ const SaladSection = () => {
     <div>
       <Cover coverContent={saladCoverContent} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 m-5 px-8 py-10">
-        {menu &&
-          menu.map((item) => <MenuItem key={item._id} item={item}></MenuItem>)}
+        {currentMenu &&
+          currentMenu.map((item) => (
+            <MenuItem key={item._id} item={item}></MenuItem>
+          ))}
       </div>
       <div className="flex justify-center mb-5">
         <Link to={`/shop/${saladCoverContent.coverTitle}`}>

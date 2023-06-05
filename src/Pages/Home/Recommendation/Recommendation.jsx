@@ -4,7 +4,8 @@ import ChefCard from "../../../Components/Shared/ChefCard/ChefCard";
 import useMenu from "../../../Hooks/UseMenu/UseMenu";
 
 const Recommendation = () => {
-  const [menu] = useMenu("salad");
+  const [, menu] = useMenu();
+  const currentMenu = menu.filter((item) => item.category === "salad");
   return (
     <div>
       <SectionTitle
@@ -12,8 +13,8 @@ const Recommendation = () => {
         Heading={"chef recommends"}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 m-8 p-12">
-        {menu &&
-          menu
+        {currentMenu &&
+          currentMenu
             .slice(0, 3)
             .map((receipe) => (
               <ChefCard key={receipe._id} receipe={receipe}></ChefCard>

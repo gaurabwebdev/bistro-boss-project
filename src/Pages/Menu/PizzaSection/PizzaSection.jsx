@@ -6,7 +6,8 @@ import MenuItem from "../../Home/MenuSection/MenuItem";
 import { Link } from "react-router-dom";
 
 const PizzaSection = () => {
-  const [menu] = useMenu("pizza");
+  const [, menu] = useMenu();
+  const currentMenu = menu.filter((item) => item.category === "pizza");
   const pizzaCoverContent = {
     img: pizzaCover,
     coverTitle: "pizza",
@@ -18,8 +19,10 @@ const PizzaSection = () => {
     <div>
       <Cover coverContent={pizzaCoverContent} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 m-5 px-8 py-10">
-        {menu &&
-          menu.map((item) => <MenuItem key={item._id} item={item}></MenuItem>)}
+        {currentMenu &&
+          currentMenu.map((item) => (
+            <MenuItem key={item._id} item={item}></MenuItem>
+          ))}
       </div>
       <div className="flex justify-center mb-5">
         <Link to={`/shop/${pizzaCoverContent.coverTitle}`}>

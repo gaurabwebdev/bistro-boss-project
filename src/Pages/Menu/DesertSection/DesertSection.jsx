@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 
 const DesertSection = () => {
   // ${desertContent.coverTitle}
-  const [menu] = useMenu("dessert");
+  const [, menu] = useMenu();
+  const currentMenu = menu.filter((item) => item.category === "dessert");
   const desertContent = {
     img: desertCover,
     coverTitle: "desserts",
@@ -20,8 +21,8 @@ const DesertSection = () => {
       <Cover coverContent={desertContent} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 m-5 px-8 py-10">
-        {menu &&
-          menu
+        {currentMenu &&
+          currentMenu
             .slice(0, 6)
             .map((item) => <MenuItem key={item._id} item={item}></MenuItem>)}
       </div>

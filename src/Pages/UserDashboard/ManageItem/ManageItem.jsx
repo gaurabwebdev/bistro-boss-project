@@ -4,7 +4,7 @@ import useMenu from "../../../Hooks/UseMenu/UseMenu";
 import ItemTable from "../ItemTable/ItemTable";
 
 const ManageItem = () => {
-  const [menu] = useMenu();
+  const [, menu] = useMenu();
   return (
     <div>
       <SectionTitle
