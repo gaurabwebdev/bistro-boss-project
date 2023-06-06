@@ -12,14 +12,15 @@ const CheckoutForm = ({ totalPrice }) => {
   const [cardError, setCardError] = useState("");
   const [axiosSecure] = useAxiosSecure();
   const [clientSecret, setClientSecret] = useState("");
+  console.log(clientSecret);
   const { user } = useContext(AuthContext);
   useEffect(() => {
-    axiosSecure.post("create-payment-content", { totalPrice }).then((res) => {
+    axiosSecure.post("/create-payment-content", { totalPrice }).then((res) => {
       if (res.data.clientSecret) {
         setClientSecret(res.data.clientSecret);
       }
     });
-  }, [axiosSecure, totalPrice]);
+  }, []);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) {
@@ -51,6 +52,8 @@ const CheckoutForm = ({ totalPrice }) => {
     if (confirmError) {
       console.log(confirmError.message);
     }
+
+    console.log(paymentIntent);
 
     if (error) {
       setCardError(error.message);
