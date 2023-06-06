@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 
-const CheckoutForm = ({ totalPrice }) => {
+const CheckoutForm = ({ cart, totalPrice }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [cardError, setCardError] = useState("");
@@ -71,7 +71,18 @@ const CheckoutForm = ({ totalPrice }) => {
 
     if (paymentIntent.status === "succeeded") {
       setTransactionId(paymentIntent.id);
-      Swal.fire("Payment Completed!", "You clicked the button!", "success");
+      const payment = {
+        email: user?.email,
+        transactionId: paymentIntent.id,
+        totalPrice,
+        date: new Date(),
+        quantity: cart?.length,
+        productNames: cart?.map((item) => item.name),
+        productIds: cart?.map((item) => item._id),
+        status: "Delivery Pending",
+      };
+      // Swal.fire("Payment Completed!", "You clicked the button!", "success");
+      axiosSecure.post("/payment", { payment });
     }
   };
   return (
