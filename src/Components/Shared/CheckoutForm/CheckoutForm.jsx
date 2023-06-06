@@ -78,11 +78,17 @@ const CheckoutForm = ({ cart, totalPrice }) => {
         date: new Date(),
         quantity: cart?.length,
         productNames: cart?.map((item) => item.name),
-        productIds: cart?.map((item) => item._id),
+        menuProductsId: cart?.map((item) => item.foodId),
+        cartProductsId: cart?.map((item) => item._id),
         status: "Delivery Pending",
       };
       // Swal.fire("Payment Completed!", "You clicked the button!", "success");
-      axiosSecure.post("/payment", { payment });
+      axiosSecure.post("/payment", { payment }).then((res) => {
+        console.log(res.data);
+        if (res.data.insertedResult || res.data.deleteResult) {
+          console.log("confirmed");
+        }
+      });
     }
   };
   return (
