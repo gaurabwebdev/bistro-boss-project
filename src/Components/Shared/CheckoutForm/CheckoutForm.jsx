@@ -3,6 +3,8 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import useAxiosSecure from "../../../Hooks/UseAxios/UseAxios";
+import { useContext } from "react";
+import { AuthContext } from "../../../Provider/AuthProvider";
 
 const CheckoutForm = ({ totalPrice }) => {
   const stripe = useStripe();
@@ -10,13 +12,14 @@ const CheckoutForm = ({ totalPrice }) => {
   const [cardError, setCardError] = useState("");
   const [axiosSecure] = useAxiosSecure();
   const [clientSecret, setClientSecret] = useState("");
+  const { user } = useContext(AuthContext);
   useEffect(() => {
     axiosSecure.post("create-payment-content", { totalPrice }).then((res) => {
       if (res.data.clientSecret) {
         setClientSecret(res.data.clientSecret);
       }
     });
-  }, [clientSecret, axiosSecure]);
+  }, [axiosSecure, totalPrice]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) {
@@ -33,6 +36,21 @@ const CheckoutForm = ({ totalPrice }) => {
       type: "card",
       card,
     });
+
+    const { paymentIntent, error: confirmError } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            name: user?.displayName || "anonymous",
+            email: user?.email || "anonymous",
+          },
+        },
+      });
+
+    if (confirmError) {
+      console.log(confirmError.message);
+    }
 
     if (error) {
       setCardError(error.message);
@@ -63,7 +81,7 @@ const CheckoutForm = ({ totalPrice }) => {
         <button
           className="btn btn-warning btn-sm mt-3"
           type="submit"
-          disabled={!stripe}
+          disabled={!stripe || !clientSecret}
         >
           Pay
         </button>
