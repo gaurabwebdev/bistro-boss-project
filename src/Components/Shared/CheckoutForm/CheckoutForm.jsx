@@ -12,15 +12,19 @@ const CheckoutForm = ({ totalPrice }) => {
   const [cardError, setCardError] = useState("");
   const [axiosSecure] = useAxiosSecure();
   const [clientSecret, setClientSecret] = useState("");
-  console.log(clientSecret);
   const { user } = useContext(AuthContext);
   useEffect(() => {
-    axiosSecure.post("/create-payment-content", { totalPrice }).then((res) => {
-      if (res.data.clientSecret) {
-        setClientSecret(res.data.clientSecret);
-      }
-    });
-  }, []);
+    if (totalPrice > 0) {
+      axiosSecure
+        .post("/create-payment-content", { totalPrice })
+        .then((res) => {
+          console.log(res);
+          if (res.data.clientSecret) {
+            setClientSecret(res.data.clientSecret);
+          }
+        });
+    }
+  }, [totalPrice]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) {
@@ -60,6 +64,10 @@ const CheckoutForm = ({ totalPrice }) => {
     } else {
       setCardError("");
       console.log("[Payement Method]", paymentMethod);
+    }
+
+    if (paymentIntent.status === "succeeded") {
+      const transactionId = paymentIntent.id;
     }
   };
   return (
