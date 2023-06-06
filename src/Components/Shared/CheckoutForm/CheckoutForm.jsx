@@ -6,9 +6,8 @@ import useAxiosSecure from "../../../Hooks/UseAxios/UseAxios";
 import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import Swal from "sweetalert2";
-import "./CheckoutForm.css";
 
-const CheckoutForm = ({ cart, totalPrice }) => {
+const CheckoutForm = ({ totalPrice }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [cardError, setCardError] = useState("");
@@ -16,7 +15,7 @@ const CheckoutForm = ({ cart, totalPrice }) => {
   const [axiosSecure] = useAxiosSecure();
   const [clientSecret, setClientSecret] = useState("");
   const { user } = useContext(AuthContext);
-  const [transactionId, setTransactionId] = useState(" ");
+  const [transactionId, setTransactionId] = useState("");
   useEffect(() => {
     if (totalPrice > 0) {
       axiosSecure
@@ -72,25 +71,7 @@ const CheckoutForm = ({ cart, totalPrice }) => {
 
     if (paymentIntent.status === "succeeded") {
       setTransactionId(paymentIntent.id);
-
-      // Save Payment Info to the server
-      const payment = {
-        email: user?.email,
-        transactionId: paymentIntent.id,
-        totalPrice,
-        quantity: cart?.length,
-        productNames: cart?.map((item) => item.name),
-        productCodes: cart?.map((item) => item._id),
-      };
-
-      axiosSecure.post("/payment", { payment }).then((res) => {
-        console.log(res);
-        if (res.data.insertedId) {
-          Swal.fire(
-            `Payment Completed! Your transaction id : ${transactionId}", "You clicked the button!", "success`
-          );
-        }
-      });
+      Swal.fire("Payment Completed!", "You clicked the button!", "success");
     }
   };
   return (
