@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 
-const CheckoutForm = ({ totalPrice }) => {
+const CheckoutForm = ({ cart, totalPrice }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [cardError, setCardError] = useState("");
@@ -74,6 +74,16 @@ const CheckoutForm = ({ totalPrice }) => {
       Swal.fire(
         `Payment Completed! Your transaction id : ${transactionId}", "You clicked the button!", "success`
       );
+
+      // Save Payment Info to the server
+      const payment = {
+        email: user?.email,
+        transactionId: paymentIntent.id,
+        totalPrice,
+        quantity: cart?.length,
+        productNames: cart?.map((item) => item.name),
+        productCodes: cart?.map((item) => item._id),
+      };
     }
   };
   return (
