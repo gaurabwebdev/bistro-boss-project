@@ -5,14 +5,17 @@ import { useState } from "react";
 import useAxiosSecure from "../../../Hooks/UseAxios/UseAxios";
 import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 const CheckoutForm = ({ totalPrice }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [cardError, setCardError] = useState("");
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [axiosSecure] = useAxiosSecure();
   const [clientSecret, setClientSecret] = useState("");
   const { user } = useContext(AuthContext);
+  const [transactionId, setTransactionId] = useState("");
   useEffect(() => {
     if (totalPrice > 0) {
       axiosSecure
@@ -36,7 +39,7 @@ const CheckoutForm = ({ totalPrice }) => {
     if (card == null) {
       return;
     }
-
+    setPaymentProcessing(true);
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card,
@@ -58,7 +61,7 @@ const CheckoutForm = ({ totalPrice }) => {
     }
 
     console.log(paymentIntent);
-
+    setPaymentProcessing(false);
     if (error) {
       setCardError(error.message);
     } else {
@@ -67,7 +70,10 @@ const CheckoutForm = ({ totalPrice }) => {
     }
 
     if (paymentIntent.status === "succeeded") {
-      const transactionId = paymentIntent.id;
+      setTransactionId(paymentIntent.id);
+      Swal.fire(
+        `Payment Completed! Your transaction id : ${transactionId}", "You clicked the button!", "success`
+      );
     }
   };
   return (
@@ -92,7 +98,7 @@ const CheckoutForm = ({ totalPrice }) => {
         <button
           className="btn btn-warning btn-sm mt-3"
           type="submit"
-          disabled={!stripe || !clientSecret}
+          disabled={!stripe || !clientSecret || paymentProcessing}
         >
           Pay
         </button>
