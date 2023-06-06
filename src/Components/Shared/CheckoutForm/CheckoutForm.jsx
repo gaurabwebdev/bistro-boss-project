@@ -1,11 +1,22 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
+import useAxiosSecure from "../../../Hooks/UseAxios/UseAxios";
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ totalPrice }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [cardError, setCardError] = useState("");
+  const [axiosSecure] = useAxiosSecure();
+  const [clientSecret, setClientSecret] = useState("");
+  useEffect(() => {
+    axiosSecure.post("create-payment-content", { totalPrice }).then((res) => {
+      if (res.data.clientSecret) {
+        setClientSecret(res.data.clientSecret);
+      }
+    });
+  }, [clientSecret, axiosSecure]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) {
